@@ -3,7 +3,7 @@ package kr.co.mvvmreceipeapp.network.model
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
-class RecipeNetworkEntity(
+data class RecipeDTO(
     @SerializedName("pk")
     var pk: Int? = null,
 
@@ -37,4 +37,4 @@ class RecipeNetworkEntity(
     @SerializedName("date_updated")
     var dateUpdated: String? = null,
 
-    )
+)
