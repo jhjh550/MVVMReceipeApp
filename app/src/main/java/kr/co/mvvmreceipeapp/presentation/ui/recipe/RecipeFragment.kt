@@ -1,4 +1,4 @@
-package kr.co.mvvmreceipeapp
+package kr.co.mvvmreceipeapp.presentation.ui.recipe
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import dagger.hilt.android.AndroidEntryPoint
+import kr.co.mvvmreceipeapp.presentation.ui.recipe_list.RecipeListViewModel
 
+@AndroidEntryPoint
 class RecipeFragment: Fragment() {
 
     override fun onCreateView(
