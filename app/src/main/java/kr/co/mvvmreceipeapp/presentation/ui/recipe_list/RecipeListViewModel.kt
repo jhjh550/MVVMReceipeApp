@@ -1,7 +1,14 @@
 package kr.co.mvvmreceipeapp.presentation.ui.recipe_list
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import kr.co.mvvmreceipeapp.domain.model.Recipe
 import kr.co.mvvmreceipeapp.network.model.RecipeDTOMapper
 import kr.co.mvvmreceipeapp.repository.RecipeRepository
 import javax.inject.Inject
@@ -9,20 +16,21 @@ import javax.inject.Named
 
 @HiltViewModel
 class RecipeListViewModel @Inject constructor(
-    private val randomString: String,
     private val repository: RecipeRepository,
-    private @Named("auth_token") val token: String
+    @Named("auth_token") private val token: String
 ): ViewModel() {
 
-    init {
-        println("ViewModel : $randomString")
-        println("ViewModel : $repository")
-        println("ViewModel : $token")
+    val recipes: MutableState<List<Recipe>> = mutableStateOf(listOf())
+
+
+    init{
+        viewModelScope.launch {
+            val result = repository.search(
+                token = token,
+                page = 1,
+                query = "chicken"
+            )
+            recipes.value = result
+        }
     }
-
-    fun getRepo() = repository
-
-    fun getRandomString() = randomString
-
-    fun getToken() = token
 }

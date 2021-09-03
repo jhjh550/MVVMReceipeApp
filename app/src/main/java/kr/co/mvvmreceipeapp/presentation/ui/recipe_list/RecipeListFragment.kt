@@ -1,6 +1,7 @@
 package kr.co.mvvmreceipeapp.presentation.ui.recipe_list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,18 +19,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kr.co.mvvmreceipeapp.R
+import kr.co.mvvmreceipeapp.util.TAG
 
 @AndroidEntryPoint
 class RecipeListFragment: Fragment() {
 
     val viewModel: RecipeListViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        println("RecipeFragmentList ${viewModel.getRepo()}")
-        println("RecipeFragmentList ${viewModel.getRandomString()}")
-        println("RecipeFragmentList ${viewModel.getToken()}")
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +33,11 @@ class RecipeListFragment: Fragment() {
     ): View {
         return ComposeView(requireContext()).apply{
             setContent {
+
+                val recipes = viewModel.recipes.value
+                for(recipe in recipes){
+                    Log.d(TAG, "onCreateView: ${recipe.title}")
+                }
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         text = "RecipeList",
