@@ -2,14 +2,11 @@ package kr.co.mvvmreceipeapp.presentation.ui.recipe_list
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kr.co.mvvmreceipeapp.domain.model.Recipe
-import kr.co.mvvmreceipeapp.network.model.RecipeDTOMapper
 import kr.co.mvvmreceipeapp.repository.RecipeRepository
 import javax.inject.Inject
 import javax.inject.Named
@@ -22,8 +19,11 @@ class RecipeListViewModel @Inject constructor(
 
     val recipes: MutableState<List<Recipe>> = mutableStateOf(listOf())
 
-
     init{
+        newSearch()
+    }
+
+    fun newSearch(){
         viewModelScope.launch {
             val result = repository.search(
                 token = token,
