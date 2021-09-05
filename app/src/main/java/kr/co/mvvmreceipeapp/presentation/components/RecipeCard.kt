@@ -8,12 +8,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import kr.co.mvvmreceipeapp.R
+import coil.compose.rememberImagePainter
+import coil.transform.CircleCropTransformation
 import kr.co.mvvmreceipeapp.domain.model.Recipe
+import kr.co.mvvmreceipeapp.R
 
 @Composable
 fun RecipeCard(
@@ -31,37 +33,52 @@ fun RecipeCard(
         Column {
             recipe.featuredImage?.let{ url ->
                 Image(
-                    painter = painterResource(id = R.drawable.empty_plate),
-                    contentDescription = "Empty Plate",
-                    modifier = Modifier
-                         .fillMaxWidth()
-                        .height(225.dp),
-                    contentScale = ContentScale.Crop
+                    painter = rememberImagePainter(
+                        data = url,
+                        builder = {
+                            crossfade(true)
+                            placeholder(R.drawable.empty_plate)
+                        }
+                    ),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = recipe.title,
+                    modifier = Modifier.fillMaxWidth()
+                        .height(225.dp)
+                        .align(CenterHorizontally)
+
                 )
             }
-            recipe.title?.let{ title ->
+            recipe.title?.let { title ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 12.dp)
+                        .padding(top=12.dp, bottom=12.dp, start = 8.dp, end=8.dp)
                 ){
                     Text(
                         text = title,
                         modifier = Modifier
                             .fillMaxWidth(0.85f)
-                            .wrapContentWidth(Alignment.Start),
-                        style = MaterialTheme.typography.h5
+                            .wrapContentWidth(Alignment.Start)
+                        ,
+                        style = MaterialTheme.typography.h3
                     )
+                    val rank = recipe.rating.toString()
                     Text(
-                        text = recipe.rating.toString(),
+                        text = rank,
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentWidth(Alignment.End)
-                            .align(Alignment.CenterVertically),
-                        style = MaterialTheme.typography.h6
+                            .align(Alignment.CenterVertically)
+                        ,
+                        style = MaterialTheme.typography.h5
                     )
                 }
             }
         }
     }
 }
+
+
+
+
+
