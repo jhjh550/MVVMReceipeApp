@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import kr.co.mvvmreceipeapp.presentation.components.FoodCategoryChip
 import kr.co.mvvmreceipeapp.presentation.components.RecipeCard
 
 @AndroidEntryPoint
@@ -45,12 +47,13 @@ class RecipeListFragment: Fragment() {
 
                 val recipes = viewModel.recipes.value
                 val query = viewModel.query.value
+                val selectedCategory = viewModel.selectedCategory.value
 
                 Column {
                     Surface(
                         elevation = 8.dp,
                         modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colors.primary
+                        color = Color.White
                     ) {
                         Column {
                             Row(
@@ -76,7 +79,7 @@ class RecipeListFragment: Fragment() {
                                     },
                                     keyboardActions = KeyboardActions(
                                         onSearch = {
-                                            viewModel.newSearch(query)
+                                            viewModel.newSearch()
                                             keyboardController?.hide()
                                         }
                                     ),
@@ -86,13 +89,20 @@ class RecipeListFragment: Fragment() {
                                     )
                                 )
                             }
-                            Row(modifier = Modifier.fillMaxWidth()){
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 8.dp, bottom = 8.dp)
+                            ){
                                 for(category in getAllFoodCategories()){
-                                    Text(
-                                        text = category.value,
-                                        style = MaterialTheme.typography.body2,
-                                        color = MaterialTheme.colors.secondary,
-                                        modifier = Modifier.padding(8.dp)
+                                    FoodCategoryChip(
+                                        category = category.value,
+                                        isSelected = selectedCategory == category,
+                                        onSelectedCategoryChanged = {
+                                            viewModel.onSelectedCategoryChanged(it)
+                                        },
+                                        onExecuteSearch = viewModel::newSearch
+
                                     )
                                 }
                             }
