@@ -52,39 +52,50 @@ class RecipeListFragment: Fragment() {
                         modifier = Modifier.fillMaxWidth(),
                         color = MaterialTheme.colors.primary
                     ) {
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth()
-                        ){
-                            TextField(
-                                modifier = Modifier
-                                    .fillMaxWidth(0.9f)
-                                    .padding(8.dp),
-                                value = query,
-                                onValueChange = { newValue ->
-                                    viewModel.onQueryChanged(newValue)
-                                },
-                                label = {
-                                    Text(text="search")
-                                },
-                                keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.Text,
-                                    imeAction = ImeAction.Search
-                                ),
-                                leadingIcon = {
-                                    Icon(Icons.Filled.Search, contentDescription = "Search")
-                                },
-                                keyboardActions = KeyboardActions(
-                                    onSearch = {
-                                        viewModel.newSearch(query)
-                                        keyboardController?.hide()
-                                    }
-                                ),
-                                textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
-                                colors = TextFieldDefaults.textFieldColors(
-                                    backgroundColor = MaterialTheme.colors.surface
+                        Column {
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                            ){
+                                TextField(
+                                    modifier = Modifier
+                                        .fillMaxWidth(0.9f)
+                                        .padding(8.dp),
+                                    value = query,
+                                    onValueChange = { newValue ->
+                                        viewModel.onQueryChanged(newValue)
+                                    },
+                                    label = {
+                                        Text(text="search")
+                                    },
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Text,
+                                        imeAction = ImeAction.Search
+                                    ),
+                                    leadingIcon = {
+                                        Icon(Icons.Filled.Search, contentDescription = "Search")
+                                    },
+                                    keyboardActions = KeyboardActions(
+                                        onSearch = {
+                                            viewModel.newSearch(query)
+                                            keyboardController?.hide()
+                                        }
+                                    ),
+                                    textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+                                    colors = TextFieldDefaults.textFieldColors(
+                                        backgroundColor = MaterialTheme.colors.surface
+                                    )
                                 )
-                            )
+                            }
+                            Row(modifier = Modifier.fillMaxWidth()){
+                                for(category in getAllFoodCategories()){
+                                    Text(
+                                        text = category.value,
+                                        style = MaterialTheme.typography.body2,
+                                        color = MaterialTheme.colors.secondary,
+                                        modifier = Modifier.padding(8.dp)
+                                    )
+                                }
+                            }
                         }
 
                     }
