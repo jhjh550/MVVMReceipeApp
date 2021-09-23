@@ -4,17 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import kr.co.mvvmreceipeapp.presentation.components.FoodCategoryChip
 import kr.co.mvvmreceipeapp.presentation.components.RecipeCard
 
@@ -89,20 +94,29 @@ class RecipeListFragment: Fragment() {
                                     )
                                 )
                             }
+
+                            var scrollState = rememberScrollState()
+                            val coroutineScope = rememberCoroutineScope()
+
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(start = 8.dp, bottom = 8.dp)
+                                    .scrollable(scrollState, Orientation.Horizontal)
                             ){
+                                coroutineScope.launch {
+                                    scrollState.scrollTo(viewModel.categoryScrollPosition)
+                                }
+
                                 for(category in getAllFoodCategories()){
                                     FoodCategoryChip(
                                         category = category.value,
                                         isSelected = selectedCategory == category,
                                         onSelectedCategoryChanged = {
                                             viewModel.onSelectedCategoryChanged(it)
+                                            viewModel.onChangeCategoryScrollPosition(scrollState.value)
                                         },
                                         onExecuteSearch = viewModel::newSearch
-
                                     )
                                 }
                             }
