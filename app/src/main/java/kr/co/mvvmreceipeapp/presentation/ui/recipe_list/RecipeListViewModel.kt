@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kr.co.mvvmreceipeapp.domain.model.Recipe
 import kr.co.mvvmreceipeapp.repository.RecipeRepository
@@ -21,6 +22,7 @@ class RecipeListViewModel @Inject constructor(
     val query = mutableStateOf("")
     val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
     var categoryScrollPosition: Int = 0
+    val loading = mutableStateOf(false)
 
     init {
         newSearch()
@@ -28,13 +30,31 @@ class RecipeListViewModel @Inject constructor(
 
     fun newSearch(){
         viewModelScope.launch {
+            loading.value = true
+            resetSearchState()
+
+            delay(2000)
+
             val result = repository.search(
                 token = token,
                 page = 1,
                 query = query.value
             )
             recipes.value = result
+
+            loading.value = false
         }
+    }
+
+    private fun resetSearchState(){
+        recipes.value = listOf()
+        if(selectedCategory.value?.value != query.value){
+            clearSelectedCategory()
+        }
+    }
+
+    private fun clearSelectedCategory(){
+        selectedCategory.value = null
     }
 
     fun onQueryChanged(query: String){
