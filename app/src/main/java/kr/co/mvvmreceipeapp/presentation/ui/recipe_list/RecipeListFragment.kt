@@ -15,6 +15,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -30,6 +32,8 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kr.co.mvvmreceipeapp.presentation.components.*
+import kr.co.mvvmreceipeapp.presentation.components.HeartAnimationDefinition.HeartButtonState
+import kr.co.mvvmreceipeapp.presentation.components.HeartAnimationDefinition.HeartButtonState.*
 
 @AndroidEntryPoint
 class RecipeListFragment: Fragment() {
@@ -61,8 +65,21 @@ class RecipeListFragment: Fragment() {
                         onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
                         onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition
                     )
+                    Row(modifier = Modifier
+                        .fillMaxSize()
+                        .height(200.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ){
+                        val state = remember{ mutableStateOf(IDLE)}
 
-                    PulsingDemo()
+                        AnimatedHeartButton(modifier = Modifier, buttonState = state) {
+                            state.value = if(state.value == IDLE) ACTIVE else IDLE
+                        }
+                    }
+
+
+                    
+//                    PulsingDemo()
 
 //                    Box(modifier = Modifier.fillMaxWidth()){
 //                        LazyColumn{
