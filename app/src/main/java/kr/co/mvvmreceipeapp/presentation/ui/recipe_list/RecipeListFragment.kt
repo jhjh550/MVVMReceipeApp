@@ -1,26 +1,17 @@
 package kr.co.mvvmreceipeapp.presentation.ui.recipe_list
 
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -28,17 +19,13 @@ import androidx.compose.ui.graphics.Brush.Companion.linearGradient
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import kr.co.mvvmreceipeapp.presentation.components.*
-import kr.co.mvvmreceipeapp.presentation.components.HeartAnimationDefinition.HeartButtonState
-import kr.co.mvvmreceipeapp.presentation.components.HeartAnimationDefinition.HeartButtonState.*
+import kr.co.mvvmreceipeapp.presentation.components.CircularIndeterminateProgressBar
+import kr.co.mvvmreceipeapp.presentation.components.RecipeCard
+import kr.co.mvvmreceipeapp.presentation.components.SearchAppBar
 
 @AndroidEntryPoint
 class RecipeListFragment: Fragment() {
@@ -59,19 +46,31 @@ class RecipeListFragment: Fragment() {
                 val query = viewModel.query.value
                 val selectedCategory = viewModel.selectedCategory.value
                 val loading = viewModel.loading.value
+                
+                Scaffold(
+                    topBar = {
+                        SearchAppBar(
+                            query = query,
+                            onQueryChanged = viewModel::onQueryChanged,
+                            onExecuteSearch = viewModel::newSearch,
+                            scrollPosition = viewModel.categoryScrollPosition,
+                            selectedCategory = selectedCategory,
+                            onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                            onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition
+                        )
+                    },
+                    bottomBar = {
 
-                Column {
-                    SearchAppBar(
-                        query = query,
-                        onQueryChanged = viewModel::onQueryChanged,
-                        onExecuteSearch = viewModel::newSearch,
-                        scrollPosition = viewModel.categoryScrollPosition,
-                        selectedCategory = selectedCategory,
-                        onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
-                        onChangeCategoryScrollPosition = viewModel::onChangeCategoryScrollPosition
-                    )
+                    },
+                    drawerContent = {
 
-                    Box(modifier = Modifier.fillMaxWidth()) {
+                    }
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colors.surface)
+                    ) {
                         if (loading) {
                             // LoadingRecipeListShimmer(imageHeight = 250.dp)
                         }
@@ -106,7 +105,6 @@ fun GradientDemo(){
             .background(brush = brush))
     }
 }
-
 
 
 
