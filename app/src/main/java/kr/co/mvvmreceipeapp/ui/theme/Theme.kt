@@ -40,8 +40,8 @@ fun MVVMReceipeAppTheme(
 
     MaterialTheme(
         colors = colors,
-        typography = Typography,
-        shapes = Shapes,
+        typography = QuickSandTypography,
+        shapes = AppShapes,
         content = content
     )
 }
